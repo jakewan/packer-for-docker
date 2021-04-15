@@ -1,5 +1,5 @@
 source "docker" "main" {
-  image  = "debian:stable-20210408-slim"
+  image  = "debian:${local.base_image}"
   commit = true
 }
 
@@ -16,8 +16,11 @@ build {
       "bash /tmp/install-deps.sh",
     ]
   }
-  post-processor "docker-tag" {
-    repository = "frostedcarbon/packer-for-docker"
-    tag        = ["0.1"]
+  post-processors {
+    post-processor "docker-tag" {
+      repository = "frostedcarbon/packer-for-docker"
+      tag        = ["${local.tag_version}-${local.base_image}"]
+    }
+    post-processor "docker-push" {}
   }
 }
